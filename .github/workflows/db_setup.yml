@@ -1,4 +1,4 @@
-name: DB Setup
+name: 01 DB Setup
 
 on:
   workflow_dispatch:
