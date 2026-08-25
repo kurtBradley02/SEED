@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-database:
+  db-setup:
     runs-on: ubuntu-latest
 
     services:
@@ -31,6 +31,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
-      - name: Run
+      - name: Check DB Status
         run: |
           PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db -c "SELECT version();"
