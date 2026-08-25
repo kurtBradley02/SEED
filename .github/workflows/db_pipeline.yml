@@ -1,19 +1,62 @@
-name: 04 DB Pipeline
+name: DB Pipeline
 
 on:
   workflow_dispatch:
 
 jobs:
-  db-setup:
-    uses: ./.github/workflows/db_setup.yml
-    secrets: inherit
+  db:
+    runs-on: ubuntu-latest
 
-  db-build:
-    needs: db-setup
-    uses: ./.github/workflows/db_build.yml
-    secrets: inherit
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-  db-test:
-    needs: db-build
-    uses: ./.github/workflows/db_test.yml
-    secrets: inherit
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install pg_prove
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libtap-parser-sourcehandler-pgtap-perl
+
+      - name: Install pgTAP inside the Postgres container
+        run: |
+          docker exec ${{ job.services.postgres.id }} apt-get update
+          docker exec ${{ job.services.postgres.id }} apt-get install -y postgresql-16-pgtap
+
+      - name: Check DB connectivity
+        run: |
+          PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db -c "SELECT version();"
+
+      - name: Enable pgTAP extension
+        run: |
+          PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db \
+            -c "CREATE EXTENSION IF NOT EXISTS pgtap;"
+
+      - name: Run DB build scripts
+        run: |
+          for f in ./01_Database/*.sql; do
+            case "$f" in
+              *test_*) continue ;;
+            esac
+            echo "Running $f"
+            PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db -f "$f"
+          done
+
+      - name: Run pgTAP tests
+        run: |
+          pg_prove -h localhost -U test_user -d test_db ./01_Database/test_operations.sql
+        env:
+          PGPASSWORD: test_pass
