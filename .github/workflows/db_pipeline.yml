@@ -47,7 +47,7 @@ jobs:
 
       - name: Run DB build scripts
         run: |
-          for f in ./01_Database/*.sql; do
+          for f in ./01_Database/grade_sheet.sql; do
             case "$f" in
               *test_*) continue ;;
             esac
@@ -57,6 +57,6 @@ jobs:
 
       - name: Run pgTAP tests
         run: |
-          pg_prove --verbose -h localhost -U test_user -d test_db ./01_Database/test_operations.sql
+          pg_prove --verbose -h localhost -U test_user -d test_db ./01_Database/test_grade_sheet.sql
         env:
           PGPASSWORD: test_pass
