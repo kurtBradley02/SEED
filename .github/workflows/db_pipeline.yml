@@ -1,4 +1,4 @@
-name: DB Pipeline
+name: 04 DB Pipeline
 
 on:
   workflow_dispatch:
@@ -11,4 +11,9 @@ jobs:
   db-build:
     needs: db-setup
     uses: ./.github/workflows/db_build.yml
+    secrets: inherit
+
+  db-test:
+    needs: db-build
+    uses: ./.github/workflows/db_test.yml
     secrets: inherit
