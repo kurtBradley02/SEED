@@ -27,10 +27,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install pgTAP and pg_prove
+      - name: Install pg_prove (runner side)
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-16-pgtap libtap-parser-sourcehandler-pgtap-perl
+          sudo apt-get install -y libtap-parser-sourcehandler-pgtap-perl
+
+      - name: Install pgTAP inside the Postgres container
+        run: |
+          docker exec ${{ job.services.postgres.id }} apt-get update
+          docker exec ${{ job.services.postgres.id }} apt-get install -y postgresql-16-pgtap
 
       - name: Enable pgTAP extension
         run: |
@@ -44,7 +49,7 @@ jobs:
             PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db -f "$f"
           done
 
-      - name: Run DB tests
+      - name: Run pgTAP tests
         run: |
           pg_prove -h localhost -U test_user -d test_db ./01_Database/test_operations.sql
         env:
