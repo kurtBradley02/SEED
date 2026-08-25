@@ -29,7 +29,7 @@ jobs:
 
       - name: Run DB scripts
         run: |
-          for f in ./db/*.sql; do
+          for f in ./01_Database/*.sql; do
             echo "Running $f"
             PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db -f "$f"
           done
