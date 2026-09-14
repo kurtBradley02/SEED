@@ -1,0 +1,23 @@
+name: API Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  api-process:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run API tests
+        working-directory: ./02_API
+        run: ./mvnw -B test
