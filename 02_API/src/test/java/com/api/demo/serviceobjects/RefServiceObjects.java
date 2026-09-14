@@ -2,9 +2,9 @@ package com.api.demo.serviceobjects;
 
 import io.restassured.RestAssured;
 
-public class ServiceObjects {
+public class RefServiceObjects {
 
-    public ServiceObjects(int port) {
+    public RefServiceObjects(int port) {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
     }
@@ -57,7 +57,5 @@ public class ServiceObjects {
                 .extract()
                 .asString();
     }
-
-
 
 }

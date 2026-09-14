@@ -1,5 +1,5 @@
 package com.api.demo;
-import com.api.demo.serviceobjects.ServiceObjects;
+import com.api.demo.serviceobjects.RefServiceObjects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +14,11 @@ public class RefTestSheet {
     @LocalServerPort
     private int port;
 
-    private ServiceObjects test;
+    private RefServiceObjects test;
 
     @BeforeEach
     void setUp() {
-        test = new ServiceObjects(port);
+        test = new RefServiceObjects(port);
     }
 
     @Test
