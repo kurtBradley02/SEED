@@ -37,7 +37,7 @@ public class TestSheet {
 
     @Test
     public void ex3(){
-        String expected = "3";
+        String expected = "DIF: 3";
         String actual = test.ex3(6,3)[1];
         assertEquals(expected, actual);
     }
