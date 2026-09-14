@@ -18,6 +18,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Make mvnw executable
+        working-directory: ./02_API
+        run: chmod +x mvnw
+
       - name: Run API tests
         working-directory: ./02_API
         run: ./mvnw -B test
