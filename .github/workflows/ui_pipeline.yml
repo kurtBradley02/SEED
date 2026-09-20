@@ -1,0 +1,21 @@
+name: UI Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ui-process:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Run UI tests
+        working-directory: ./03_WebUI
+        run: node --test
