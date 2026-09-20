@@ -1,0 +1,20 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  db:
+    uses: ./.github/workflows/db_pipeline.yml
+
+  api:
+    needs: db
+    uses: ./.github/workflows/api_pipeline.yml
+
+  ui:
+    needs: api
+    uses: ./.github/workflows/ui_pipeline.yml
