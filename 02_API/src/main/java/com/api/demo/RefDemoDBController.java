@@ -22,4 +22,10 @@ public class RefDemoDBController {
     public Map<String, Object> getById(@PathVariable int id) {
         return jdbcTemplate.queryForMap("SELECT * FROM tbldemodb WHERE id = ?", id);
     }
+
+    @GetMapping("/ex1")
+    public String ex1() {
+        return "Hello World";
+    }
+
 }

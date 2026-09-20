@@ -13,7 +13,7 @@ public class RefServiceObjects {
         return RestAssured
                 .given()
                 .when()
-                .get("/refdb/1")
+                .get("/ex1")
                 .then()
                 .statusCode(200)
                 .extract()
