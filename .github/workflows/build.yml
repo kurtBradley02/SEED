@@ -9,12 +9,12 @@ on:
 
 jobs:
   db:
-    uses: ./.github/workflows/db_pipeline.yml
+    uses: ./.github/workflows/db_pipe.yml
 
   api:
     needs: db
-    uses: ./.github/workflows/api_pipeline.yml
+    uses: ./.github/workflows/api_pipe.yml
 
   ui:
     needs: api
-    uses: ./.github/workflows/ui_pipeline.yml
+    uses: ./.github/workflows/ui_pipe.yml
