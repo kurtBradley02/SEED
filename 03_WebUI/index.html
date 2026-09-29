@@ -1,15 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <button onclick="ex1()">Ex 1 output</button>
+  <head></head>
+  <body>
+    <h2 id="title">Add Facebook Login to your webpage</h2>
+    <button id="loginBtn" onclick="loginWithFacebook()">Log in with Facebook</button>
 
-    <script src="main.js"></script>
+    <p id="profile"></p>
 
-</body>
-</html> 
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "1562212251878953",
+          xfbml: true,
+          version: "v25.0",
+        });
+        console.log("SDK initialized");
+
+        // On page load: if already logged in, skip straight to the logged-in view
+        FB.getLoginStatus(function (response) {
+          console.log("getLoginStatus response:", response);
+          if (response.status === "connected") {
+            showLoggedIn(false);
+          }
+        });
+      };
+
+      function loginWithFacebook() {
+        console.log("Login button clicked");
+        FB.login(function (response) {
+          console.log("FB.login response:", response);
+          if (response.authResponse) {
+            showLoggedIn(true);
+          } else {
+            alert("Login cancelled.");
+          }
+        }, { scope: "public_profile,email" });
+      }
+
+      function showLoggedIn(showAlert) {
+        document.getElementById("title").hidden = true;
+        document.getElementById("loginBtn").hidden = true;
+
+        FB.api("/me", { fields: "name,email" }, function (me) {
+          console.log("/me response:", me);
+          if (showAlert) alert("Login success!");
+          document.getElementById("profile").textContent =
+            "Good to see you, " + me.name + ". Your email is " + me.email;
+        });
+      }
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, "script", "facebook-jssdk");
+    </script>
+  </body>
+</html>
